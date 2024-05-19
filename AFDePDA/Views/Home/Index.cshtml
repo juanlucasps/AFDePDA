@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Autômatos";
+}
+
+<h2>Escolha o Tipo de Autômato</h2>
+
+@using (Html.BeginForm("ExecutarAutomato", "Home", FormMethod.Post))
+{
+    <div>
+        <label for="tipoAutomato">Escolha o tipo de autômato:</label>
+        <select id="tipoAutomato" name="tipoAutomato">
+            <option value="AFD" @(ViewBag.TipoAutomatoSelecionado == "AFD" ? "selected" : "")>AFD (Autômato Finito Determinístico)</option>
+            <option value="PDA" @(ViewBag.TipoAutomatoSelecionado == "PDA" ? "selected" : "")>Autômato de Pilha</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="entrada">Informe a string de entrada:</label>
+        <input type="text" id="entrada" name="entrada" />
+    </div>
+
+    <button type="submit">Executar</button>
+}
+
+@if (ViewBag.Resultado != null)
+{
+    <h2>Resultado:</h2>
+    <p>@ViewBag.Resultado</p>
+}

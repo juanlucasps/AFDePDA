@@ -7,7 +7,7 @@ public class HomeController : Controller
 {
     public ActionResult Index()
     {
-        return View();
+        return View(); 
     }
 
     [HttpPost]
@@ -15,41 +15,20 @@ public class HomeController : Controller
     {
         ViewBag.TipoAutomatoSelecionado = tipoAutomato;
 
-        // Verificar se a entrada contém apenas caracteres permitidos
-        if (!entrada.All(c => c == 'a' || c == 'b' || c == '0' || c == '1'))
+        if (string.IsNullOrWhiteSpace(entrada) || !entrada.All(c => c == 'a' || c == 'b' || c == '0' || c == '1'))
         {
-            ViewBag.Erro = "Entrada inválida. As entradas permitidas são: 'a', 'b', '0', '1'.";
+            ViewBag.Erro = "Entrada inválida. As entradas permitidas são 'a', 'b', '0', '1'.";
             return View("Index");
         }
 
-        // Converter a entrada para o formato adequado
-        IEnumerable<char> entradaCaracteres = entrada.ToCharArray();
-        IEnumerable<int> entradaInteiros = entrada.Select(c => c == 'a' ? 0 : c == 'b' ? 1 : int.Parse(c.ToString()));
-
         if (tipoAutomato == "AFD")
         {
-            bool resultado;
-            if (entrada.All(c => c == 'a' || c == 'b')) // Verifica se a entrada é string
-            {
-                resultado = ExecutarAFD(entradaCaracteres);
-            }
-            else // Se não é string, deve ser inteiro
-            {
-                resultado = ExecutarAFD(entradaInteiros);
-            }
+            bool resultado = ExecutarAFD(entrada);
             ViewBag.Resultado = resultado ? "Aceito pelo AFD" : "Rejeitado pelo AFD";
         }
         else if (tipoAutomato == "PDA")
         {
-            bool resultado;
-            if (entrada.All(c => c == 'a' || c == 'b')) // Verifica se a entrada é string
-            {
-                resultado = ExecutarPDA(entradaCaracteres);
-            }
-            else // Se não é string, deve ser inteiro
-            {
-                resultado = ExecutarPDA(entradaInteiros);
-            }
+            bool resultado = ExecutarPDA(entrada);
             ViewBag.Resultado = resultado ? "Aceito pelo PDA" : "Rejeitado pelo PDA";
         }
         else
@@ -57,7 +36,7 @@ public class HomeController : Controller
             ViewBag.Resultado = "Escolha um tipo de autômato válido";
         }
 
-        return View("Index");
+        return View("Index"); // Retorna a partial view com o resultado
     }
 
     // Método para executar o AFD aab*aa ou a^n^b^m, sendo n um número par. Para o computador 0 significa a e 1 b
@@ -67,10 +46,20 @@ public class HomeController : Controller
 
         foreach (T item in entrada)
         {
-            // Se o item for 'a' ou 0, empilhamos
-            if (item.Equals((T)Convert.ChangeType('a', typeof(T))) || item.Equals((T)Convert.ChangeType(0, typeof(T))))
+            // Verifica se o item é do tipo esperado e empilha se for 'a' ou 0
+            if (typeof(T) == typeof(char))
             {
-                pilha.Push(item);
+                if (item.Equals((T)(object)'a'))
+                {
+                    pilha.Push(item);
+                }
+            }
+            else if (typeof(T) == typeof(int))
+            {
+                if (item.Equals((T)(object)0))
+                {
+                    pilha.Push(item);
+                }
             }
         }
 
@@ -85,21 +74,41 @@ public class HomeController : Controller
 
         foreach (T item in entrada)
         {
-            // Se o item for 'a' ou 0, empilha
-            if (item.Equals((T)Convert.ChangeType('a', typeof(T))) || item.Equals((T)Convert.ChangeType(0, typeof(T))))
+            // Verifica se o item é do tipo esperado e empilha se for 'a' ou 0
+            if (typeof(T) == typeof(char))
             {
-                pilha.Push(item);
-            }
-            // Se o item for 'b' ou 1, desempilha
-            else if (item.Equals((T)Convert.ChangeType('b', typeof(T))) || item.Equals((T)Convert.ChangeType(1, typeof(T))))
-            {
-                if (pilha.Count > 0)
+                if (item.Equals((T)(object)'a'))
                 {
-                    pilha.Pop();
+                    pilha.Push(item);
                 }
-                else
+                else if (item.Equals((T)(object)'b'))
                 {
-                    return false; // Rejeita se tentar desempilhar sem itens na pilha
+                    if (pilha.Count > 0)
+                    {
+                        pilha.Pop();
+                    }
+                    else
+                    {
+                        return false; // Rejeita se tentar desempilhar sem itens na pilha
+                    }
+                }
+            }
+            else if (typeof(T) == typeof(int))
+            {
+                if (item.Equals((T)(object)0))
+                {
+                    pilha.Push(item);
+                }
+                else if (item.Equals((T)(object)1))
+                {
+                    if (pilha.Count > 0)
+                    {
+                        pilha.Pop();
+                    }
+                    else
+                    {
+                        return false; // Rejeita se tentar desempilhar sem itens na pilha
+                    }
                 }
             }
         }

@@ -6,24 +6,43 @@
 
 @using (Html.BeginForm("ExecutarAutomato", "Home", FormMethod.Post))
 {
-    <div>
-        <label for="tipoAutomato">Escolha o tipo de autômato:</label>
-        <select id="tipoAutomato" name="tipoAutomato">
-            <option value="AFD" @(ViewBag.TipoAutomatoSelecionado == "AFD" ? "selected" : "")>AFD (Autômato Finito Determinístico)</option>
-            <option value="PDA" @(ViewBag.TipoAutomatoSelecionado == "PDA" ? "selected" : "")>Autômato de Pilha</option>
-        </select>
-    </div>
+    <div class="container mt-4">
+        <form>
+            <div class="mb-3">
+                <label for="tipoAutomato" class="form-label">Escolha o tipo de autômato:</label>
+                <select id="tipoAutomato" name="tipoAutomato" class="form-select">
+                    <option value="AFD" @(ViewBag.TipoAutomatoSelecionado == "AFD" ? "selected" : "")>AFD (Autômato Finito Determinístico)</option>
+                    <option value="PDA" @(ViewBag.TipoAutomatoSelecionado == "PDA" ? "selected" : "")>Autômato de Pilha</option>
+                </select>
+            </div>
 
-    <div>
-        <label for="entrada">Informe a string de entrada:</label>
-        <input type="text" id="entrada" name="entrada" />
-    </div>
+            <div class="mb-3">
+                <label for="entrada" class="form-label">Informe a entrada:</label>
+                <input type="text" id="entrada" name="entrada" class="form-control" />
+            </div>
 
-    <button type="submit">Executar</button>
+            <button type="submit" class="btn btn-secondary">Executar</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">Limpar</a> <!-- Botão Limpar -->
+        </form>
+    </div>
 }
 
 @if (ViewBag.Resultado != null)
 {
-    <h2>Resultado:</h2>
-    <p>@ViewBag.Resultado</p>
+    <div class="container mt-4">
+        <h2>Resultado:</h2>
+        <div class="alert alert-success" role="alert">
+            @ViewBag.Resultado
+        </div>
+    </div>
+}
+
+@if (ViewBag.Erro != null)
+{
+    <div class="container mt-4">
+        <h2>Erro:</h2>
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Erro
+        </div>
+    </div>
 }

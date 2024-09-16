@@ -49,14 +49,7 @@ public class HomeController : Controller
             // Verifica se o item é do tipo esperado e empilha se for 'a' ou 0
             if (typeof(T) == typeof(char))
             {
-                if (item.Equals((T)(object)'a'))
-                {
-                    pilha.Push(item);
-                }
-            }
-            else if (typeof(T) == typeof(int))
-            {
-                if (item.Equals((T)(object)0))
+                if (item.Equals((T)(object)'a') || item.Equals((T)(object)'0'))
                 {
                     pilha.Push(item);
                 }
@@ -77,29 +70,11 @@ public class HomeController : Controller
             // Verifica se o item é do tipo esperado e empilha se for 'a' ou 0
             if (typeof(T) == typeof(char))
             {
-                if (item.Equals((T)(object)'a'))
+                if (item.Equals((T)(object)'a') || item.Equals((T)(object)'0'))
                 {
                     pilha.Push(item);
                 }
-                else if (item.Equals((T)(object)'b'))
-                {
-                    if (pilha.Count > 0)
-                    {
-                        pilha.Pop();
-                    }
-                    else
-                    {
-                        return false; // Rejeita se tentar desempilhar sem itens na pilha
-                    }
-                }
-            }
-            else if (typeof(T) == typeof(int))
-            {
-                if (item.Equals((T)(object)0))
-                {
-                    pilha.Push(item);
-                }
-                else if (item.Equals((T)(object)1))
+                else if (item.Equals((T)(object)'b') || item.Equals((T)(object)'1'))
                 {
                     if (pilha.Count > 0)
                     {
